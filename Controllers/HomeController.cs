@@ -1,9 +1,10 @@
-﻿using JqueryWithAjax.Models;
+using JqueryWithAjax.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace JqueryWithAjax.Controllers
 {
@@ -25,23 +26,54 @@ namespace JqueryWithAjax.Controllers
         }
         public JsonResult Create(RegisterModel createModel)
         {
-            _logic.CreateDetails(createModel);
-            return Json(new { success = true, message = "Data inserted successfully" }, JsonRequestBehavior.AllowGet);
+            try
+            {
+                // Basic validation for mobile number (can be enhanced with DataAnnotations in model)
+                if (createModel.MobileNum <= 0)
+                {
+                    return Json(new { success = false, message = "Mobile Number cannot be zero or negative." });
+                }
+
+                _logic.CreateDetails(createModel);
+                return Json(new { success = true, message = "Data inserted successfully" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (e.g., using a logging framework)
+                return Json(new { success = false, message = "Error inserting data: " + ex.Message });
+            }
         }
 
         public JsonResult Update(RegisterModel editModel)
         {
-            _logic.EditDetails(editModel);
-            return Json(new { success = true, message = "Data updated successfully" }, JsonRequestBehavior.AllowGet);
+            try
+            {
+                if (editModel.MobileNum <= 0)
+                {
+                    return Json(new { success = false, message = "Mobile Number cannot be zero or negative for update." });
+                }
+                _logic.EditDetails(editModel);
+                return Json(new { success = true, message = "Data updated successfully" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return Json(new { success = false, message = "Error updating data: " + ex.Message });
+            }
         }
 
         public JsonResult Delete(int id)
         {
-            _logic.DeleteDetails(id);
-            return Json(new { success = true, message = "Data deleted successfully" }, JsonRequestBehavior.AllowGet);
+            try
+            {
+                _logic.DeleteDetails(id);
+                return Json(new { success = true, message = "Data deleted successfully" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return Json(new { success = false, message = "Error deleting data: " + ex.Message });
+            }
         }
-
-
-
     }
 }
