@@ -1,4 +1,4 @@
-﻿using JqueryWithAjax.Models;
+using JqueryWithAjax.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
